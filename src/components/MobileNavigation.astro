@@ -1,0 +1,66 @@
+---
+import { navigation } from '../config/navigation';
+import { localizedPath } from '../utils/paths';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const normalizedPath = pathname.replace(/\/$/, '') || '/';
+---
+<details class="mobile-nav">
+  <summary>{lang === 'bn' ? 'মেনু' : 'Menu'}</summary>
+  <nav aria-label={lang === 'bn' ? 'মোবাইল নেভিগেশন' : 'Mobile navigation'}>
+    <ul>
+      {navigation[lang].map((item) => {
+        const href = localizedPath(lang, item.path);
+        const normalizedHref = href.replace(/\/$/, '') || '/';
+        const active = item.path === ''
+          ? normalizedPath === normalizedHref
+          : normalizedPath.startsWith(normalizedHref);
+
+        return <li><a href={href} aria-current={active ? 'page' : undefined}>{item.label}</a></li>;
+      })}
+    </ul>
+  </nav>
+</details>
+
+<style>
+  .mobile-nav { position: relative; }
+  .mobile-nav summary {
+    display: inline-flex;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--space-2);
+    font-size: var(--step--1);
+    font-weight: 650;
+  }
+  .mobile-nav nav {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 1rem);
+    right: 0;
+    width: min(18rem, calc(100vw - 2rem));
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    background: var(--color-paper-soft);
+    box-shadow: var(--shadow-soft);
+  }
+  .mobile-nav ul { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .mobile-nav a {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding-inline: var(--space-2);
+    text-decoration: none;
+  }
+  .mobile-nav a[aria-current='page'] { font-weight: 750; }
+  .mobile-nav a[aria-current='page']::before { content: '—'; margin-right: var(--space-2); color: var(--color-earth); }
+  @media (min-width: 52.01rem) { .mobile-nav { display: none; } }
+</style>

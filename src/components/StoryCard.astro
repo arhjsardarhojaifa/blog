@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { contentPath } from '../utils/paths';
+import { formatDate } from '../utils/dates';
+import LanguageAvailability from './LanguageAvailability.astro';
+import type { Language } from '../utils/i18n';
+interface Props { story: CollectionEntry<'stories'>; showImage?: boolean; availableLanguages?:Language[]; }
+const { story, showImage = true, availableLanguages } = Astro.props;
+---
+<article class="editorial-card">
+  {showImage && <a class="card-image" href={contentPath(story.data.lang, 'story', story.data.routeSlug)} tabindex="-1" aria-hidden="true">
+    {story.data.cover ? <Image src={story.data.cover} alt="" widths={[480,720,960]} sizes="(min-width: 48rem) 40vw, 100vw" /> : <span></span>}
+  </a>}
+  <div class="card-copy">
+    <div class="meta-row"><p class="eyebrow">{[story.data.location, story.data.category, formatDate(story.data.publishedAt, story.data.lang)].filter(Boolean).join(' · ')}</p>{availableLanguages && <LanguageAvailability current={story.data.lang} available={availableLanguages} />}</div>
+    <h2><a href={contentPath(story.data.lang, 'story', story.data.routeSlug)}>{story.data.title}</a></h2>
+    <p>{story.data.excerpt}</p>
+  </div>
+</article>
+<style>
+  .editorial-card { display:grid; gap:var(--space-4); padding-block:var(--space-6); border-top:1px solid var(--color-border); }
+  .card-image { display:block; overflow:hidden; aspect-ratio:16/10; background:var(--color-sand); }
+  .card-image :global(img), .card-image span { width:100%; height:100%; object-fit:cover; transition:transform 400ms ease; }
+  .card-image:hover :global(img){ transform:scale(1.02); }
+  .meta-row { display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-4); align-items:baseline; justify-content:space-between; }
+  .meta-row .eyebrow { margin-bottom:0; }
+  h2 { margin-bottom:var(--space-3); font-family:var(--font-serif-latin); font-size:var(--step-2); line-height:1.2; }
+  :global(html[lang='bn']) h2 { font-family:var(--font-serif-bengali); line-height:1.45; }
+  h2 a { text-decoration:none; }
+  .card-copy > p:last-child { max-width:42rem; margin-bottom:0; color:var(--color-ink-soft); }
+  @media (min-width:48rem){ .editorial-card { grid-template-columns:minmax(15rem,.72fr) minmax(0,1.28fr); gap:var(--space-7); align-items:center; } .editorial-card:not(:has(.card-image)) { grid-template-columns:1fr; } }
+</style>

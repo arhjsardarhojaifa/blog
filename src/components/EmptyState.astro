@@ -1,0 +1,17 @@
+---
+interface Props { lang: 'bn' | 'en'; type: 'story' | 'blog' | 'photography'; }
+const { lang, type } = Astro.props;
+const labels = {
+  bn: { story: 'এখনো কোনো প্রকাশিত স্টোরি নেই।', blog: 'এখনো কোনো প্রকাশিত ব্লগ নেই।', photography: 'এখনো কোনো প্রকাশিত ফটোগ্রাফি সংগ্রহ নেই।' },
+  en: { story: 'No published Stories yet.', blog: 'No published Blog posts yet.', photography: 'No published Photography collections yet.' }
+};
+---
+<div class="empty-state">
+  <p>{labels[lang][type]}</p>
+  <small>{lang === 'bn' ? 'কনটেন্ট ফাইল যোগ করলে এটি স্বয়ংক্রিয়ভাবে এখানে দেখা যাবে।' : 'Published content will appear here automatically when you add content files.'}</small>
+</div>
+<style>
+  .empty-state { padding:var(--space-8) var(--space-5); border-block:1px solid var(--color-border); text-align:center; color:var(--color-ink-soft); }
+  .empty-state p { margin-bottom:var(--space-2); font-family:var(--font-serif-latin); font-size:var(--step-2); color:var(--color-ink); }
+  :global(html[lang='bn']) .empty-state p { font-family:var(--font-serif-bengali); }
+</style>

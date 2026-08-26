@@ -1,0 +1,22 @@
+Arhj Sardar Hojaifa Travel Blog — Phase 8.1 bilingual slug fix
+
+এই patch টি আপনার existing project folder-এর ওপর copy/replace করার জন্য।
+
+Target folder:
+E:\Arhj Sardar Hojaifa\blog
+
+Steps:
+1. dev server বন্ধ করুন: Ctrl key ধরে C চাপুন। "Ctrl + C" লিখবেন না।
+2. এই ZIP extract করুন।
+3. extracted folder-এর ভিতরের সব file/folder select করে Copy করুন।
+4. E:\Arhj Sardar Hojaifa\blog খুলে Paste করুন।
+5. Windows জিজ্ঞেস করলে "Replace the files in the destination" নির্বাচন করুন।
+6. node_modules এবং package-lock.json delete করবেন না।
+7. CMD নতুন করে খুলে:
+   cd /d "E:\Arhj Sardar Hojaifa\blog"
+   npm run dev
+8. duplicate slug warning না থাকলে Ctrl+C দিয়ে server বন্ধ করে:
+   npm run qa:launch
+   npm run build
+
+এই patch public URL বদলায় না। /bn/... এবং /en/... route একই থাকবে।

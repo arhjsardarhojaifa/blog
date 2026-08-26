@@ -1,0 +1,41 @@
+---
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  section: 'story' | 'blog' | 'photography' | 'contact';
+}
+
+const { lang, section } = Astro.props;
+const copy = {
+  story: {
+    bn: ['স্টোরি', 'অভিজ্ঞতা, পরিবেশ ও কাহিনিনির্ভর দীর্ঘপাঠের জায়গা।'],
+    en: ['Story', 'A home for immersive, atmosphere-led travel narratives.']
+  },
+  blog: {
+    bn: ['ব্লগ', 'ভ্রমণ, গন্তব্য, ইতিহাস, সংস্কৃতি ও ব্যবহারিক তথ্যের জায়গা।'],
+    en: ['Blog', 'Travel knowledge, destination context, history, culture, and practical information.']
+  },
+  photography: {
+    bn: ['ফটোগ্রাফি', 'ছবিকে কেন্দ্র করে তৈরি ভিজ্যুয়াল ভ্রমণসংকলনের জায়গা।'],
+    en: ['Photography', 'Image-led travel collections designed to let photographs breathe.']
+  },
+  contact: {
+    bn: ['যোগাযোগ', 'সোশ্যাল লিংক ও পৃথক পেশাগত পোর্টফোলিওর লিংক এখানে থাকবে।'],
+    en: ['Contact', 'Social links and the separate professional portfolio link will live here.']
+  }
+} as const;
+
+const [title, description] = copy[section][lang];
+---
+
+<section class="container placeholder-note">
+  <p class="eyebrow">{lang === 'bn' ? 'ডেভেলপমেন্ট প্লেসহোল্ডার' : 'Development placeholder'}</p>
+  <h1>{title}</h1>
+  <p>{description}</p>
+  <p>
+    {lang === 'bn'
+      ? 'রাউটটি এখন সক্রিয়; পূর্ণ সম্পাদকীয় ডিজাইন পরবর্তী পেজ-বিল্ড পর্যায়ে যুক্ত হবে।'
+      : 'This route is active; its complete editorial design will be added in the page-build phase.'}
+  </p>
+</section>

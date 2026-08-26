@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { contentPath } from '../utils/paths';
+interface Props { collection: CollectionEntry<'photography'>; }
+const { collection } = Astro.props;
+---
+<article class="photo-card">
+  <a class="photo" href={contentPath(collection.data.lang, 'photography', collection.data.routeSlug)} tabindex="-1" aria-hidden="true">
+    {collection.data.cover ? <Image src={collection.data.cover} alt="" widths={[480,720,960,1200]} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" /> : <span></span>}
+  </a>
+  <div>
+    <p class="eyebrow">{collection.data.location ?? (collection.data.lang === 'bn' ? 'ফটোগ্রাফি' : 'Photography')}</p>
+    <h2><a href={contentPath(collection.data.lang, 'photography', collection.data.routeSlug)}>{collection.data.title}</a></h2>
+    {collection.data.description && <p>{collection.data.description}</p>}
+  </div>
+</article>
+<style>
+  .photo-card { display:grid; gap:var(--space-3); }
+  .photo { display:block; aspect-ratio:4/3; overflow:hidden; background:var(--color-sand); }
+  .photo :global(img), .photo span { width:100%; height:100%; object-fit:cover; transition:transform 500ms ease; }
+  .photo:hover :global(img) { transform:scale(1.02); }
+  h2 { margin-bottom:var(--space-2); font-family:var(--font-serif-latin); font-size:var(--step-2); line-height:1.2; }
+  :global(html[lang='bn']) h2 { font-family:var(--font-serif-bengali); line-height:1.4; }
+  h2 a { text-decoration:none; }
+  p:last-child { color:var(--color-ink-soft); }
+</style>

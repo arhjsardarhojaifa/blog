@@ -1,0 +1,5 @@
+---
+import '../styles/global.css';import '../styles/typography.css';import {localizedPath} from '../utils/paths';import {siteConfig} from '../config/site';
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex"/><title>404 — {siteConfig.title}</title></head><body><main class="not-found"><p class="eyebrow">404</p><h1>Path lost.<br/><span lang="bn">পথটি পাওয়া যায়নি।</span></h1><p>The page may have moved, or the address may be incorrect.</p><div><a class="button-link" href={localizedPath('bn')}>বাংলা হোম</a><a class="button-link" href={localizedPath('en')}>English home</a></div></main></body></html>
+<style>.not-found{display:grid;place-content:center;min-height:100vh;width:min(calc(100% - 2rem),50rem);margin:auto}.not-found h1{font-family:var(--font-serif-latin);font-size:var(--step-4);line-height:1.15}.not-found h1 span{font-family:var(--font-serif-bengali);line-height:1.4}.not-found>p:not(.eyebrow){color:var(--color-ink-soft)}.not-found>div{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-4)}</style>

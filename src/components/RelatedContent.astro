@@ -1,0 +1,24 @@
+---
+import StoryCard from './StoryCard.astro';
+import BlogCard from './BlogCard.astro';
+import PhotographyCard from './PhotographyCard.astro';
+import type { CollectionEntry } from 'astro:content';
+import type { Language } from '../utils/i18n';
+interface Props { lang:Language; stories?:CollectionEntry<'stories'>[]; blogs?:CollectionEntry<'blogs'>[]; photography?:CollectionEntry<'photography'>[]; }
+const { lang, stories=[], blogs=[], photography=[] }=Astro.props;
+const hasAny=stories.length||blogs.length||photography.length;
+---
+{hasAny && <aside class="related container" aria-labelledby="related-heading">
+  <p class="eyebrow">{lang === 'bn' ? 'আরও আবিষ্কার করুন' : 'Continue exploring'}</p>
+  <h2 id="related-heading">{lang === 'bn' ? 'সম্পর্কিত কনটেন্ট' : 'Related content'}</h2>
+  {stories.map((story)=><StoryCard story={story} />)}
+  {blogs.map((blog)=><BlogCard blog={blog} />)}
+  {photography.length > 0 && <div class="photo-grid">{photography.map((item)=><PhotographyCard collection={item} />)}</div>}
+</aside>}
+<style>
+  .related { margin-top:var(--space-10); padding-top:var(--space-7); border-top:1px solid var(--color-border); }
+  .related > h2 { margin-bottom:var(--space-6); font-family:var(--font-serif-latin); font-size:var(--step-3); }
+  :global(html[lang='bn']) .related > h2 { font-family:var(--font-serif-bengali); }
+  .photo-grid { display:grid; gap:var(--space-6); }
+  @media(min-width:48rem){ .photo-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+</style>

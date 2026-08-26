@@ -1,0 +1,87 @@
+---
+import type { ImageMetadata } from 'astro';
+import '../styles/global.css';
+import '../styles/typography.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SEOHead from '../components/SEOHead.astro';
+import { siteConfig } from '../config/site';
+import type { Language } from '../utils/i18n';
+import { assetPath } from '../utils/paths';
+
+interface AlternateLink { lang: Language; href: string; }
+interface Props {
+  lang: Language;
+  title?: string;
+  seoTitle?: string;
+  description?: string;
+  canonicalPath?: string;
+  alternateLinks?: AlternateLink[];
+  alternateHref?: string;
+  alternateAvailable?: boolean;
+  noIndex?: boolean;
+  socialImage?: ImageMetadata | string;
+  socialImageAlt?: string;
+  ogType?: 'website' | 'article';
+  schemaType?: 'WebPage' | 'Article' | 'BlogPosting' | 'ImageGallery';
+  publishedAt?: Date;
+  updatedAt?: Date;
+  section?: string;
+  tags?: string[];
+}
+
+const {
+  lang,
+  title,
+  seoTitle,
+  description = siteConfig.description[lang],
+  canonicalPath = Astro.url.pathname,
+  alternateLinks = [],
+  alternateHref,
+  alternateAvailable,
+  noIndex = false,
+  socialImage,
+  socialImageAlt,
+  ogType = 'website',
+  schemaType = 'WebPage',
+  publishedAt,
+  updatedAt,
+  section,
+  tags = []
+} = Astro.props;
+
+const contentTitle = title ?? siteConfig.title;
+const rawSeoTitle = seoTitle ?? contentTitle;
+const pageTitle = rawSeoTitle === siteConfig.title
+  ? siteConfig.title
+  : `${rawSeoTitle} — ${siteConfig.title}`;
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <SEOHead
+    lang={lang}
+    title={pageTitle}
+    rawTitle={contentTitle}
+    description={description}
+    canonicalPath={canonicalPath}
+    alternateLinks={alternateLinks}
+    noIndex={noIndex}
+    socialImage={socialImage}
+    socialImageAlt={socialImageAlt}
+    ogType={ogType}
+    schemaType={schemaType}
+    publishedAt={publishedAt}
+    updatedAt={updatedAt}
+    section={section}
+    tags={tags}
+  />
+  <link rel="icon" href={assetPath('favicon.svg')} type="image/svg+xml" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">{lang === 'bn' ? 'মূল কনটেন্টে যান' : 'Skip to content'}</a>
+  <Header lang={lang} pathname={Astro.url.pathname} alternateHref={alternateHref} alternateAvailable={alternateAvailable} />
+  <main id="main-content" tabindex="-1"><slot /></main>
+  <Footer lang={lang} />
+</body>
+</html>

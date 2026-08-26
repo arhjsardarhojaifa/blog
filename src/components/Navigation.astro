@@ -1,0 +1,65 @@
+---
+import { navigation } from '../config/navigation';
+import { localizedPath } from '../utils/paths';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const items = navigation[lang];
+---
+
+<nav class="desktop-nav" aria-label={lang === 'bn' ? 'প্রধান নেভিগেশন' : 'Primary navigation'}>
+  <ul>
+    {items.map((item) => {
+      const href = localizedPath(lang, item.path);
+      const normalizedPath = pathname.replace(/\/$/, '') || '/';
+      const normalizedHref = href.replace(/\/$/, '') || '/';
+      const active = item.path === ''
+        ? normalizedPath === normalizedHref
+        : normalizedPath.startsWith(normalizedHref);
+
+      return (
+        <li>
+          <a href={href} aria-current={active ? 'page' : undefined}>{item.label}</a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
+
+<style>
+  .desktop-nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.1vw, 2rem);
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .desktop-nav a {
+    position: relative;
+    text-decoration: none;
+    font-size: var(--step--1);
+  }
+
+  .desktop-nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -0.45rem;
+    left: 0;
+    height: 1px;
+    background: var(--color-earth);
+  }
+
+  @media (max-width: 52rem) {
+    .desktop-nav {
+      display: none;
+    }
+  }
+</style>

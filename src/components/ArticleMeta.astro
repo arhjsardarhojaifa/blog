@@ -1,0 +1,39 @@
+---
+import { formatDate } from '../utils/dates';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  date: Date;
+  updatedAt?: Date;
+  location?: string;
+  category?: string;
+  readingMinutes?: number;
+}
+
+const { lang, date, updatedAt, location, category, readingMinutes } = Astro.props;
+const readLabel = readingMinutes
+  ? (lang === 'bn'
+    ? `${new Intl.NumberFormat('bn-BD').format(readingMinutes)} মিনিট পড়া`
+    : `${readingMinutes} min read`)
+  : undefined;
+---
+<div class="article-meta" aria-label={lang === 'bn' ? 'লেখার তথ্য' : 'Article information'}>
+  {location && <span>{location}</span>}
+  {location && (category || date || readLabel) && <span aria-hidden="true">·</span>}
+  {category && <span>{category}</span>}
+  {category && (date || readLabel) && <span aria-hidden="true">·</span>}
+  <time datetime={date.toISOString()}>{formatDate(date, lang)}</time>
+  {readLabel && <span aria-hidden="true">·</span>}
+  {readLabel && <span>{readLabel}</span>}
+</div>
+{updatedAt && (
+  <p class="updated">
+    {lang === 'bn' ? 'হালনাগাদ' : 'Updated'}: <time datetime={updatedAt.toISOString()}>{formatDate(updatedAt, lang)}</time>
+  </p>
+)}
+
+<style>
+  .article-meta { display: flex; flex-wrap: wrap; gap: .4rem .65rem; justify-content: center; color: var(--color-ink-soft); font-size: var(--step--1); }
+  .updated { margin-top: var(--space-2); text-align: center; color: var(--color-ink-soft); font-size: var(--step--1); }
+</style>

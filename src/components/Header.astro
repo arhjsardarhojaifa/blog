@@ -1,0 +1,70 @@
+---
+import { siteConfig } from '../config/site';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import MobileNavigation from './MobileNavigation.astro';
+import Navigation from './Navigation.astro';
+import { localizedPath } from '../utils/paths';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  pathname: string;
+  alternateHref?: string;
+  alternateAvailable?: boolean;
+}
+
+const { lang, pathname, alternateHref, alternateAvailable } = Astro.props;
+---
+<header class="site-header">
+  <div class="container--wide header-inner">
+    <a class="brand" href={localizedPath(lang)} aria-label={`${siteConfig.title} — ${lang === 'bn' ? 'হোম' : 'Home'}`}>
+      {siteConfig.title}
+    </a>
+
+    <Navigation lang={lang} pathname={pathname} />
+
+    <div class="header-actions">
+      <LanguageSwitcher lang={lang} alternateHref={alternateHref} alternateAvailable={alternateAvailable} />
+      <MobileNavigation lang={lang} pathname={pathname} />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+    background: color-mix(in srgb, var(--color-paper) 94%, transparent);
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-5);
+    align-items: center;
+    min-height: 5rem;
+  }
+
+  .brand {
+    overflow: hidden;
+    max-width: 24rem;
+    font-size: var(--step--1);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  @media (min-width: 52.01rem) {
+    .header-inner { grid-template-columns: minmax(11rem, 1fr) auto minmax(11rem, 1fr); }
+    .header-actions { justify-content: flex-end; }
+  }
+</style>

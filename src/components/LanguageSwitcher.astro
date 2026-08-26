@@ -1,0 +1,34 @@
+---
+import { languageLabels, oppositeLanguage, type Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  alternateHref?: string;
+  alternateAvailable?: boolean;
+}
+
+const { lang, alternateHref, alternateAvailable = Boolean(alternateHref) } = Astro.props;
+const alternate = oppositeLanguage(lang);
+const unavailableText = lang === 'bn' ? 'এই ভাষার সংস্করণ এখনো নেই' : 'This translation is not available yet';
+---
+<nav class="language-switcher" aria-label={lang === 'bn' ? 'ভাষা নির্বাচন' : 'Language selection'}>
+  <span aria-current="page">{languageLabels[lang]}</span>
+  <span aria-hidden="true">/</span>
+  {
+    alternateAvailable && alternateHref ? (
+      <a href={alternateHref} lang={alternate}>{languageLabels[alternate]}</a>
+    ) : (
+      <span class="unavailable" aria-disabled="true" title={unavailableText}>
+        <span lang={alternate}>{languageLabels[alternate]}</span>
+        <span class="sr-only"> — {unavailableText}</span>
+      </span>
+    )
+  }
+</nav>
+
+<style>
+  .language-switcher { display: inline-flex; gap: .45rem; align-items: center; white-space: nowrap; font-size: var(--step--1); }
+  .language-switcher [aria-current='page'] { font-weight: 700; }
+  .language-switcher a { display: inline-flex; min-height: 1.5rem; align-items: center; }
+  .unavailable { color: var(--color-ink-soft); cursor: not-allowed; text-decoration: line-through; text-decoration-thickness: 1px; }
+</style>

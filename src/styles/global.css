@@ -1,0 +1,18 @@
+@import './tokens.css';
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--color-paper);color:var(--color-ink);scroll-behavior:smooth}
+body{margin:0;min-width:320px;background:var(--color-paper);color:var(--color-ink);font-family:var(--font-sans-latin);font-size:var(--step-0);line-height:1.65;text-rendering:optimizeLegibility}
+html[lang='bn'] body{font-family:var(--font-sans-bengali);line-height:1.78}
+img,picture,svg{display:block;max-width:100%}
+button,input,textarea,select{font:inherit}
+a{color:inherit;text-decoration-thickness:.08em;text-underline-offset:.2em}a:hover{text-decoration-color:var(--color-earth)}
+:focus-visible{outline:3px solid var(--color-focus);outline-offset:4px}.site-footer :focus-visible,.photo-section :focus-visible,.lightbox :focus-visible{outline-color:var(--color-paper-soft)}::selection{background:var(--color-sand);color:var(--color-ink)}
+h1,h2,h3,p{margin-top:0}h1,h2,h3{text-wrap:balance}
+.container{width:min(calc(100% - 2rem),var(--content-width));margin-inline:auto}.container--wide{width:min(calc(100% - 2rem),var(--wide-content-width));margin-inline:auto}
+.eyebrow{color:var(--color-ink-soft);font-size:var(--step--1);font-weight:650;letter-spacing:.08em;text-transform:uppercase}html[lang='bn'] .eyebrow{letter-spacing:.02em;text-transform:none}
+.skip-link{position:fixed;z-index:1000;top:var(--space-3);left:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--color-ink);color:var(--color-paper-soft);transform:translateY(-200%)}.skip-link:focus{transform:translateY(0)}
+.section{padding-block:clamp(3.5rem,8vw,7rem)}.section--soft{background:var(--color-paper-soft)}
+.button-link{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border:1px solid var(--color-ink);text-decoration:none;font-weight:700;transition:background var(--transition-fast),color var(--transition-fast)}.button-link:hover{background:var(--color-ink);color:var(--color-paper-soft)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:48rem){.container,.container--wide{width:min(calc(100% - 4rem),var(--content-width))}.container--wide{width:min(calc(100% - 4rem),var(--wide-content-width))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}

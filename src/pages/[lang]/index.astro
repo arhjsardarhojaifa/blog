@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FeaturedStory from '../../components/FeaturedStory.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import PhotographyCard from '../../components/PhotographyCard.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getVisibleCollection, featuredFirst } from '../../utils/content';
+import { isLanguage, oppositeLanguage } from '../../utils/i18n';
+import { localizedPath } from '../../utils/paths';
+export function getStaticPaths(){return[{params:{lang:'bn'}},{params:{lang:'en'}}]}
+const {lang:paramLang}=Astro.params;if(!isLanguage(paramLang))throw new Error(`Unsupported language: ${paramLang}`);const lang=paramLang;const alt=oppositeLanguage(lang);
+const stories=featuredFirst(await getVisibleCollection('stories',lang));const blogs=featuredFirst(await getVisibleCollection('blogs',lang));const photos=featuredFirst(await getVisibleCollection('photography',lang));
+const featured=stories[0];const latestStories=stories.filter((entry)=>entry.id!==featured?.id).slice(0,3);const latestBlogs=blogs.slice(0,3);const photoPreview=photos.slice(0,4);
+const copy=lang==='bn'?{hero:'ভ্রমণ, গল্প ও আলোকচিত্রের একটি ব্যক্তিগত প্রকাশনা',heroBody:'পথের তথ্যের পাশাপাশি জায়গার আবহ, অনুভূতি ও দৃশ্যকে ধরে রাখার জন্য তৈরি একটি দ্বিভাষিক ট্রাভেল জার্নাল।',featured:'নির্বাচিত স্টোরি',latest:'সাম্প্রতিক স্টোরি',blog:'ব্লগ থেকে',photo:'ফটোগ্রাফি',intro:'এই প্রকাশনা সম্পর্কে',introBody:'এখানে ভ্রমণগল্প, গন্তব্যভিত্তিক লেখা এবং আলোকচিত্র পাশাপাশি থাকবে—যাতে একটি জায়গাকে শুধু তথ্য দিয়ে নয়, তার আবহ, দৃশ্য ও অভিজ্ঞতার মধ্য দিয়েও আবিষ্কার করা যায়।',explore:'আরও ঘুরে দেখুন',allStories:'সব স্টোরি',allBlogs:'সব ব্লগ',allPhotos:'সব ফটোগ্রাফি'}:{hero:'A personal publication for travel, story and photography',heroBody:'A bilingual travel journal built to hold not only practical details, but also atmosphere, memory, emotion and the visual character of a place.',featured:'Featured story',latest:'Latest stories',blog:'From the blog',photo:'Photography',intro:'About this publication',introBody:'This publication brings together travel stories, destination-focused writing, and photography so a place can be discovered not only through information, but through atmosphere, images, and experience.',explore:'Explore further',allStories:'All Stories',allBlogs:'All Blog posts',allPhotos:'All Photography'};
+---
+<BaseLayout lang={lang} alternateHref={localizedPath(alt)} alternateAvailable={true} alternateLinks={[{lang,href:localizedPath(lang)},{lang:alt,href:localizedPath(alt)}]} socialImage={photoPreview[0]?.data.cover} socialImageAlt={photoPreview[0]?.data.seo?.ogImageAlt??photoPreview[0]?.data.coverAlt}>
+  <section class="hero container--wide">
+    <p class="eyebrow">{lang==='bn'?'ট্রাভেল জার্নাল':'Travel journal'}</p>
+    <h1>{copy.hero}</h1>
+    <p>{copy.heroBody}</p>
+    <div class="hero-rule" aria-hidden="true"></div>
+    {photoPreview[0]?.data.cover && <div class="hero-visual"><Image src={photoPreview[0].data.cover} alt="" widths={[720,960,1280,1600,2000]} sizes="(min-width:94rem) 90rem, 100vw" loading="eager" /></div>}
+  </section>
+  <section class="section container--wide">
+    <SectionHeading title={copy.featured} href={localizedPath(lang,'story')} linkLabel={copy.allStories} />
+    {featured ? <FeaturedStory story={featured} /> : <EmptyState lang={lang} type="story" />}
+  </section>
+  {latestStories.length>0 && <section class="section section--soft"><div class="container"><SectionHeading title={copy.latest} href={localizedPath(lang,'story')} linkLabel={copy.allStories} />{latestStories.map((story)=><StoryCard story={story} />)}</div></section>}
+  <section class="section container">
+    <SectionHeading title={copy.blog} href={localizedPath(lang,'blog')} linkLabel={copy.allBlogs} />
+    {latestBlogs.length ? latestBlogs.map((blog)=><BlogCard blog={blog} />) : <EmptyState lang={lang} type="blog" />}
+  </section>
+  <section class="section photo-section"><div class="container--wide"><SectionHeading title={copy.photo} href={localizedPath(lang,'photography')} linkLabel={copy.allPhotos} />{photoPreview.length?<div class="photo-grid">{photoPreview.map((item)=><PhotographyCard collection={item} />)}</div>:<EmptyState lang={lang} type="photography" />}</div></section>
+  <section class="section container publication-intro"><p class="eyebrow">{copy.intro}</p><h2>{copy.explore}</h2><p>{copy.introBody}</p><div class="intro-links"><a href={localizedPath(lang,'story')}>{copy.allStories}</a><a href={localizedPath(lang,'blog')}>{copy.allBlogs}</a><a href={localizedPath(lang,'photography')}>{copy.allPhotos}</a></div></section>
+</BaseLayout>
+<style>
+  .hero{padding-block:clamp(5rem,11vw,11rem)}.hero h1{max-width:17ch;margin-bottom:var(--space-5);font-family:var(--font-serif-latin);font-size:clamp(3rem,6.5vw,7.5rem);font-weight:500;line-height:.98;letter-spacing:-.035em}:global(html[lang='bn']) .hero h1{max-width:20ch;font-family:var(--font-serif-bengali);line-height:1.22;letter-spacing:0}.hero>p:not(.eyebrow){max-width:45rem;color:var(--color-ink-soft);font-size:var(--step-1)}.hero-rule{width:clamp(7rem,17vw,15rem);height:1px;margin-top:var(--space-7);background:var(--color-earth)}.hero-visual{margin-top:clamp(3rem,7vw,7rem);overflow:hidden;max-height:72vh}.hero-visual :global(img){width:100%;height:clamp(24rem,60vw,52rem);object-fit:cover}
+  .photo-section{background:var(--color-forest-deep);color:var(--color-paper-soft)}.photo-section :global(.section-heading),.photo-section :global(.photo-card){--color-ink:var(--color-paper-soft);--color-ink-soft:color-mix(in srgb,var(--color-paper-soft) 68%,transparent);--color-border:color-mix(in srgb,var(--color-paper-soft) 22%,transparent)}.photo-grid{display:grid;gap:var(--space-6)}
+  .publication-intro{max-width:54rem}.publication-intro h2{font-family:var(--font-serif-latin);font-size:var(--step-3)}:global(html[lang='bn']) .publication-intro h2{font-family:var(--font-serif-bengali)}.publication-intro>p:last-of-type{color:var(--color-ink-soft)}.intro-links{display:flex;flex-wrap:wrap;gap:var(--space-4);margin-top:var(--space-5)}.intro-links a{font-weight:700;text-decoration:none}
+  @media(min-width:48rem){.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>

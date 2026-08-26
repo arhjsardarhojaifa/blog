@@ -1,0 +1,5 @@
+---
+import '../styles/global.css';import {localizedPath} from '../utils/paths';import {siteConfig} from '../config/site';
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex"/><title>{siteConfig.title}</title></head><body><main class="language-entry"><p class="eyebrow">Language / ভাষা</p><h1>{siteConfig.title}</h1><p>Choose a language to enter the publication. <span lang="bn">প্রকাশনায় প্রবেশের জন্য ভাষা নির্বাচন করুন।</span></p><div><a class="button-link" href={localizedPath('bn')}>বাংলা</a><a class="button-link" href={localizedPath('en')}>English</a></div></main></body></html>
+<style>.language-entry{display:grid;place-content:center;min-height:100vh;width:min(calc(100% - 2rem),42rem);margin:auto}.language-entry h1{font-family:var(--font-serif-latin);font-size:var(--step-4)}.language-entry>p:not(.eyebrow){color:var(--color-ink-soft)}.language-entry>div{display:flex;gap:var(--space-3);margin-top:var(--space-4)}</style>

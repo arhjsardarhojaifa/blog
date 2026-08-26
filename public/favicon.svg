@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Placeholder travel journal icon">
+  <rect width="64" height="64" rx="12" fill="#33483a"/>
+  <path d="M14 43c9-1 14-9 19-19 4 9 8 14 17 19" fill="none" stroke="#f6f1e7" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="45" cy="19" r="5" fill="#d8c5a8"/>
+</svg>

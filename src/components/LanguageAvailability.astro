@@ -1,0 +1,30 @@
+---
+import { languageLabels, type Language } from '../utils/i18n';
+
+interface Props {
+  current: Language;
+  available: Language[];
+}
+
+const { current, available } = Astro.props;
+---
+
+<span
+  class="language-availability"
+  aria-label={current === 'bn' ? 'উপলভ্য ভাষা' : 'Available languages'}
+>
+  {available.map((lang, index) => (
+    <span class="language-availability__item">
+      <span lang={lang}>{languageLabels[lang]}</span>
+      {index < available.length - 1 ? <span aria-hidden="true"> / </span> : null}
+    </span>
+  ))}
+</span>
+
+<style>
+  .language-availability {
+    color: var(--color-ink-soft);
+    font-size: var(--step--1);
+    white-space: nowrap;
+  }
+</style>

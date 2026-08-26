@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  credit?: string;
+  layout?: 'standard' | 'wide' | 'full';
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  caption,
+  credit,
+  layout = 'standard',
+  loading = 'lazy'
+} = Astro.props;
+
+const sizes = layout === 'standard'
+  ? '(min-width: 48rem) 42rem, calc(100vw - 2rem)'
+  : layout === 'wide'
+    ? '(min-width: 94rem) 90rem, calc(100vw - 2rem)'
+    : '100vw';
+---
+<figure class:list={['editorial-image', `editorial-image--${layout}`]}>
+  <Image
+    src={src}
+    alt={alt}
+    widths={[480, 720, 960, 1280, 1600, 2000]}
+    sizes={sizes}
+    loading={loading}
+  />
+  {(caption || credit) && (
+    <figcaption>
+      {caption && <span>{caption}</span>}
+      {caption && credit && <span aria-hidden="true"> · </span>}
+      {credit && <span class="credit">{credit}</span>}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .editorial-image {
+    margin-block: clamp(2rem, 5vw, 4rem);
+  }
+
+  .editorial-image :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  .editorial-image--wide {
+    width: min(calc(100vw - 2rem), var(--wide-content-width));
+    max-width: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .editorial-image--full {
+    width: 100vw;
+    max-width: none;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  figcaption {
+    max-width: var(--reading-width-story);
+    margin: var(--space-2) auto 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-sans-latin);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  :global(html[lang='bn']) figcaption {
+    font-family: var(--font-sans-bengali);
+    line-height: 1.7;
+  }
+
+  .credit {
+    opacity: .82;
+  }
+
+  @media (min-width: 48rem) {
+    .editorial-image--wide {
+      width: min(calc(100vw - 4rem), var(--wide-content-width));
+    }
+  }
+</style>

@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import ArticleMeta from '../components/ArticleMeta.astro';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+  title: string;
+  seoTitle?: string;
+  description: string;
+  eyebrow?: string;
+  subtitle?: string;
+  cover?: ImageMetadata;
+  coverAlt?: string;
+  socialImageAlt?: string;
+  date: Date;
+  updatedAt?: Date;
+  location?: string;
+  category?: string;
+  tags?: string[];
+  readingMinutes?: number;
+  alternateHref?: string;
+  alternateAvailable?: boolean;
+  contentType?: 'story' | 'blog';
+  canonicalPath?: string;
+  alternateLinks?: Array<{ lang: Language; href: string }>;
+  noIndex?: boolean;
+}
+
+const {
+  lang,
+  title,
+  seoTitle,
+  description,
+  eyebrow,
+  subtitle,
+  cover,
+  coverAlt = '',
+  socialImageAlt,
+  date,
+  updatedAt,
+  location,
+  category,
+  tags = [],
+  readingMinutes,
+  alternateHref,
+  alternateAvailable,
+  contentType = 'story',
+  canonicalPath,
+  alternateLinks,
+  noIndex = false
+} = Astro.props;
+
+const schemaType = contentType === 'blog' ? 'BlogPosting' : 'Article';
+---
+<BaseLayout
+  lang={lang}
+  title={title}
+  seoTitle={seoTitle}
+  description={description}
+  canonicalPath={canonicalPath}
+  alternateLinks={alternateLinks}
+  alternateHref={alternateHref}
+  alternateAvailable={alternateAvailable}
+  noIndex={noIndex}
+  socialImage={cover}
+  socialImageAlt={socialImageAlt ?? coverAlt}
+  ogType="article"
+  schemaType={schemaType}
+  publishedAt={date}
+  updatedAt={updatedAt}
+  section={category}
+  tags={tags}
+>
+  <article class:list={['article-shell', `article-shell--${contentType}`]}>
+    <header class="article-header container">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      {subtitle && <p class="deck">{subtitle}</p>}
+      <ArticleMeta lang={lang} date={date} updatedAt={updatedAt} location={location} category={category} readingMinutes={readingMinutes} />
+    </header>
+
+    {cover && (
+      <figure class="cover container--wide">
+        <Image
+          src={cover}
+          alt={coverAlt}
+          widths={[720, 960, 1280, 1600, 2000]}
+          sizes="(min-width: 94rem) 90rem, 100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <slot name="cover-caption" />
+      </figure>
+    )}
+
+    <div class:list={['prose', contentType === 'blog' && 'prose--blog']}><slot /></div>
+    <slot name="after-article" />
+  </article>
+</BaseLayout>
+
+<style>
+  .article-shell { padding-top: clamp(3rem, 7vw, 7rem); }
+  .article-header { width: min(calc(100% - 2rem), 60rem); margin-bottom: var(--space-7); text-align: center; }
+  h1 { margin-bottom: var(--space-4); font-family: var(--font-serif-latin); font-size: var(--step-5); line-height: 1.04; }
+  :global(html[lang='bn']) h1 { font-family: var(--font-serif-bengali); line-height: 1.28; }
+  .deck { max-width: 44rem; margin: 0 auto var(--space-5); color: var(--color-ink-soft); font-family: var(--font-serif-latin); font-size: var(--step-1); }
+  :global(html[lang='bn']) .deck { font-family: var(--font-serif-bengali); }
+  .cover { margin-bottom: clamp(3rem, 7vw, 6rem); }
+  .cover :global(img) { width: 100%; max-height: 75vh; object-fit: cover; }
+  .article-shell--blog .article-header { max-width: 54rem; }
+</style>

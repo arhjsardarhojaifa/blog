@@ -1,0 +1,139 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Language } from '../utils/i18n';
+
+interface GalleryImage {
+  image: ImageMetadata;
+  alt: string;
+  caption?: string;
+  credit?: string;
+}
+
+interface Props { lang: Language; images: GalleryImage[]; }
+const { lang, images } = Astro.props;
+const lightboxTitle = lang === 'bn' ? 'ছবির বড় ভিউ' : 'Large image view';
+---
+<div class="gallery" data-gallery>
+  {images.map((item, index) => (
+    <figure class:list={['gallery-item', index % 5 === 0 && 'gallery-item--wide']}>
+      <button
+        type="button"
+        class="gallery-open"
+        data-index={index}
+        aria-label={lang === 'bn' ? `বড় করে দেখুন: ${item.alt}` : `View larger: ${item.alt}`}
+      >
+        <Image
+          src={item.image}
+          alt={item.alt}
+          widths={[480, 720, 960, 1280, 1600]}
+          sizes={index % 5 === 0 ? '100vw' : '(min-width: 48rem) 50vw, 100vw'}
+          loading="lazy"
+        />
+      </button>
+      {(item.caption || item.credit) && (
+        <figcaption>{item.caption}{item.caption && item.credit && ' · '}{item.credit}</figcaption>
+      )}
+    </figure>
+  ))}
+</div>
+
+<dialog class="lightbox" data-lightbox aria-labelledby="lightbox-title">
+  <h2 id="lightbox-title" class="sr-only">{lightboxTitle}</h2>
+  <div class="lightbox-bar">
+    <span data-counter aria-live="polite"></span>
+    <button type="button" data-close aria-label={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}>×</button>
+  </div>
+  <div class="lightbox-stage">
+    <button
+      type="button"
+      class="nav-button"
+      data-prev
+      aria-label={lang === 'bn' ? 'আগের ছবি' : 'Previous image'}
+      aria-keyshortcuts="ArrowLeft"
+    >←</button>
+    <div class="lightbox-image" data-stage></div>
+    <button
+      type="button"
+      class="nav-button"
+      data-next
+      aria-label={lang === 'bn' ? 'পরের ছবি' : 'Next image'}
+      aria-keyshortcuts="ArrowRight"
+    >→</button>
+  </div>
+  <p data-caption aria-live="polite"></p>
+</dialog>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const dialog = gallery.nextElementSibling as HTMLDialogElement | null;
+    if (!dialog) return;
+
+    const buttons = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-index]'));
+    const stage = dialog.querySelector<HTMLElement>('[data-stage]');
+    const caption = dialog.querySelector<HTMLElement>('[data-caption]');
+    const counter = dialog.querySelector<HTMLElement>('[data-counter]');
+    const previousButton = dialog.querySelector<HTMLButtonElement>('[data-prev]');
+    const nextButton = dialog.querySelector<HTMLButtonElement>('[data-next]');
+    let current = 0;
+    let lastTrigger: HTMLButtonElement | null = null;
+
+    if (buttons.length <= 1) {
+      previousButton?.setAttribute('hidden', '');
+      nextButton?.setAttribute('hidden', '');
+    }
+
+    const show = (index: number) => {
+      if (!buttons.length) return;
+      current = (index + buttons.length) % buttons.length;
+      const figure = buttons[current]?.closest('figure');
+      const image = buttons[current]?.querySelector('img');
+      const figcaption = figure?.querySelector('figcaption');
+      if (!stage || !image || !counter) return;
+
+      const clone = image.cloneNode(true) as HTMLImageElement;
+      clone.loading = 'eager';
+      stage.replaceChildren(clone);
+      counter.textContent = `${current + 1} / ${buttons.length}`;
+      if (caption) caption.textContent = figcaption?.textContent ?? '';
+    };
+
+    buttons.forEach((button, index) => button.addEventListener('click', () => {
+      lastTrigger = button;
+      show(index);
+      dialog.showModal();
+    }));
+
+    dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close());
+    previousButton?.addEventListener('click', () => show(current - 1));
+    nextButton?.addEventListener('click', () => show(current + 1));
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => lastTrigger?.focus());
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft' && buttons.length > 1) { event.preventDefault(); show(current - 1); }
+      if (event.key === 'ArrowRight' && buttons.length > 1) { event.preventDefault(); show(current + 1); }
+    });
+  });
+</script>
+
+<style>
+  .gallery { display: grid; grid-template-columns: 1fr; gap: var(--space-5); }
+  figure { margin: 0; }
+  .gallery-open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .gallery-open :global(img) { width: 100%; height: auto; }
+  figcaption { margin-top: var(--space-2); color: var(--color-ink-soft); font-size: var(--step--1); }
+  .lightbox { width: min(96vw, 100rem); height: min(94vh, 70rem); padding: var(--space-4); border: 0; background: var(--color-ink); color: var(--color-paper-soft); }
+  .lightbox::backdrop { background: rgb(0 0 0 / .82); }
+  .lightbox-bar { display: flex; justify-content: space-between; align-items: center; }
+  [data-close] { display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 0; background: none; color: inherit; font-size: 2rem; cursor: pointer; }
+  .lightbox-stage { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-3); align-items: center; height: calc(100% - 5rem); }
+  .lightbox-image { display: grid; place-items: center; height: 100%; overflow: hidden; }
+  .lightbox-image :global(img) { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  .nav-button { width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / .35); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+  .nav-button[hidden] { display: none; }
+  [data-caption] { margin: 0; text-align: center; font-size: var(--step--1); }
+  @media (min-width: 48rem) {
+    .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    .gallery-item--wide { grid-column: 1 / -1; }
+  }
+</style>

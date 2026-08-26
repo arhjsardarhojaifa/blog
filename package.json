@@ -1,0 +1,29 @@
+{
+  "name": "arhj-sardar-hojaifa-travel-blog",
+  "version": "0.5.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "content:new": "node scripts/new-content.mjs",
+    "qa": "node scripts/qa.mjs",
+    "qa:launch": "node scripts/qa.mjs --launch"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.7",
+    "astro": "^7.2.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "6.0.3"
+  },
+  "description": "Bilingual travel storytelling, blog, and photography publication built with Astro.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arhjsardarhojaifa/blog.git"
+  },
+  "homepage": "https://arhjsardarhojaifa.github.io/blog/"
+}
