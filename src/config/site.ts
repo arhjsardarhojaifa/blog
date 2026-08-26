@@ -5,9 +5,11 @@ export const siteConfig = {
     en: 'A bilingual travel publication for immersive stories, practical travel writing, and photography.'
   },
   social: {
-    instagram: 'SOCIAL_INSTAGRAM_URL',
-    facebook: 'SOCIAL_FACEBOOK_URL',
-    youtube: 'SOCIAL_YOUTUBE_URL'
+    youtube: 'https://www.youtube.com/@ArhjSardarHojaifa',
+    facebookProfile: 'https://www.facebook.com/ArhjSardarHojaifa',
+    facebookPage: 'https://www.facebook.com/@ArhjSardarHojaifa2',
+    instagram: 'https://www.instagram.com/arhjsardarhojaifa',
+    tiktok: 'https://www.tiktok.com/@arhjsardarhojaifa'
   },
-  professionalPortfolio: 'PROFESSIONAL_PORTFOLIO_URL'
+  professionalPortfolio: 'https://arhjsardarhojaifa.github.io/portfolio/'
 } as const;

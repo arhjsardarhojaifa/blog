@@ -1,8 +1,176 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';import PageIntro from '../../components/PageIntro.astro';import {siteConfig} from '../../config/site';import {isLanguage,oppositeLanguage} from '../../utils/i18n';import {localizedPath} from '../../utils/paths';
-export function getStaticPaths(){return[{params:{lang:'bn'}},{params:{lang:'en'}}]}const {lang:paramLang}=Astro.params;if(!isLanguage(paramLang))throw new Error('Unsupported language');const lang=paramLang;const alt=oppositeLanguage(lang);
-const isConfigured=(value:string)=>/^https?:\/\//i.test(value);const social=[['Instagram',siteConfig.social.instagram],['Facebook',siteConfig.social.facebook],['YouTube',siteConfig.social.youtube]] as const;
-const copy=lang==='bn'?{title:'যোগাযোগ',intro:'এই পেজটি ট্রাভেল জার্নালের পাঠকদের জন্য সহজ যোগাযোগ ও সামাজিক মাধ্যমের পথ রাখবে। পেশাগত সহযোগিতার জন্য আলাদা পোর্টফোলিও ওয়েবসাইটের লিংক থাকবে।',social:'সামাজিক মাধ্যম',socialBody:'আপনার আসল লিংক দেওয়ার আগ পর্যন্ত নিচের মানগুলো ইচ্ছাকৃত প্লেসহোল্ডার।',professional:'পেশাগত ওয়েবসাইট',professionalBody:'সহযোগিতা, স্পনসরশিপ, পেশাগত তথ্য ও পোর্টফোলিওর জন্য আপনার আলাদা ওয়েবসাইটে যাওয়ার লিংক এখানে থাকবে।',placeholder:'কনফিগার করা হয়নি',visit:'ওয়েবসাইটে যান'}:{title:'Contact',intro:'A simple contact surface for readers of this travel journal, with social links and a clearly separate path to the professional portfolio website.',social:'Social media',socialBody:'These values intentionally remain placeholders until you provide the real URLs.',professional:'Professional website',professionalBody:'Collaborations, sponsorships, professional information and portfolio material belong on your separate professional website.',placeholder:'Not configured',visit:'Visit website'};
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { siteConfig } from '../../config/site';
+import { isLanguage, oppositeLanguage } from '../../utils/i18n';
+import { localizedPath } from '../../utils/paths';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'bn' } }, { params: { lang: 'en' } }];
+}
+
+const { lang: paramLang } = Astro.params;
+if (!isLanguage(paramLang)) throw new Error('Unsupported language');
+const lang = paramLang;
+const alt = oppositeLanguage(lang);
+
+const social = [
+  { label: 'YouTube', value: siteConfig.social.youtube },
+  { label: lang === 'bn' ? 'Facebook প্রোফাইল' : 'Facebook Profile', value: siteConfig.social.facebookProfile },
+  { label: lang === 'bn' ? 'Facebook পেজ' : 'Facebook Page', value: siteConfig.social.facebookPage },
+  { label: 'Instagram', value: siteConfig.social.instagram },
+  { label: 'TikTok', value: siteConfig.social.tiktok }
+] as const;
+
+const copy = lang === 'bn'
+  ? {
+      title: 'যোগাযোগ',
+      intro: 'ভ্রমণ, গল্প ও আলোকচিত্রের নতুন প্রকাশনা অনুসরণ করতে সামাজিক মাধ্যমগুলোতে যুক্ত থাকতে পারেন। পেশাগত কাজ, সহযোগিতা ও পোর্টফোলিওর জন্য আলাদা পেশাগত ওয়েবসাইট রয়েছে।',
+      social: 'সামাজিক মাধ্যম',
+      socialBody: 'নতুন ভ্রমণগল্প, ছবি ও প্রকাশনার আপডেটের জন্য নিচের প্রোফাইলগুলোতে যুক্ত হতে পারেন।',
+      professional: 'পেশাগত ওয়েবসাইট',
+      professionalBody: 'পেশাগত পরিচিতি, কাজ, সহযোগিতা ও পোর্টফোলিও-সংক্রান্ত তথ্যের জন্য আলাদা পোর্টফোলিও ওয়েবসাইট দেখুন।',
+      visit: 'পোর্টফোলিও ওয়েবসাইটে যান',
+      open: 'খুলুন'
+    }
+  : {
+      title: 'Contact',
+      intro: 'Follow the publication across social platforms for new travel stories, photographs, and updates. Professional work, collaborations, and portfolio material remain on a separate professional website.',
+      social: 'Social media',
+      socialBody: 'Follow these profiles for new travel stories, photography, and publication updates.',
+      professional: 'Professional website',
+      professionalBody: 'For professional information, work, collaborations, and portfolio material, visit the separate portfolio website.',
+      visit: 'Visit portfolio website',
+      open: 'Open'
+    };
 ---
-<BaseLayout lang={lang} title={copy.title} description={copy.intro} alternateHref={localizedPath(alt,'contact')} alternateAvailable={true} alternateLinks={[{lang,href:localizedPath(lang,'contact')},{lang:alt,href:localizedPath(alt,'contact')}]}> <div class="container"><PageIntro eyebrow={lang==='bn'?'পাঠক ও যোগাযোগ':'Readers & contact'} title={copy.title} intro={copy.intro}/><div class="contact-grid"><section><p class="eyebrow">{copy.social}</p><h2>{copy.social}</h2><p>{copy.socialBody}</p><dl>{social.map(([label,value])=><div><dt>{label}</dt><dd>{isConfigured(value)?<a href={value} rel="me noreferrer">{value}</a>:<code>{value}</code>}</dd></div>)}</dl></section><section class="professional"><p class="eyebrow">{copy.professional}</p><h2>{copy.professional}</h2><p>{copy.professionalBody}</p>{isConfigured(siteConfig.professionalPortfolio)?<a class="button-link" href={siteConfig.professionalPortfolio} rel="noreferrer">{copy.visit}</a>:<><code>{siteConfig.professionalPortfolio}</code><p class="status">{copy.placeholder}</p></>}</section></div></div></BaseLayout>
-<style>.contact-grid{display:grid;gap:var(--space-8);padding-bottom:var(--space-8)}section{padding-top:var(--space-5);border-top:1px solid var(--color-border)}h2{font-family:var(--font-serif-latin);font-size:var(--step-2)}:global(html[lang='bn']) h2{font-family:var(--font-serif-bengali)}section>p:not(.eyebrow){max-width:38rem;color:var(--color-ink-soft)}dl{margin:var(--space-5) 0 0}dl div{display:grid;gap:var(--space-2);padding:var(--space-4) 0;border-top:1px solid var(--color-border)}dt{font-weight:700}dd{margin:0;overflow-wrap:anywhere}code{color:var(--color-forest-deep)}.professional{padding:var(--space-6);background:var(--color-paper-soft)}.status{margin-top:var(--space-4);font-size:var(--step--1)}@media(min-width:54rem){.contact-grid{grid-template-columns:1.2fr .8fr}}</style>
+<BaseLayout
+  lang={lang}
+  title={copy.title}
+  description={copy.intro}
+  alternateHref={localizedPath(alt, 'contact')}
+  alternateAvailable={true}
+  alternateLinks={[
+    { lang, href: localizedPath(lang, 'contact') },
+    { lang: alt, href: localizedPath(alt, 'contact') }
+  ]}
+>
+  <div class="container">
+    <PageIntro
+      eyebrow={lang === 'bn' ? 'পাঠক ও যোগাযোগ' : 'Readers & contact'}
+      title={copy.title}
+      intro={copy.intro}
+    />
+
+    <div class="contact-grid">
+      <section>
+        <p class="eyebrow">{copy.social}</p>
+        <h2>{copy.social}</h2>
+        <p>{copy.socialBody}</p>
+        <dl>
+          {social.map(({ label, value }) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>
+                <a href={value} target="_blank" rel="me noreferrer">
+                  {copy.open}<span class="sr-only"> — {label}</span>
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section class="professional">
+        <p class="eyebrow">{copy.professional}</p>
+        <h2>{copy.professional}</h2>
+        <p>{copy.professionalBody}</p>
+        <a
+          class="button-link"
+          href={siteConfig.professionalPortfolio}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {copy.visit}
+        </a>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  section {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+
+  h2 {
+    font-family: var(--font-serif-latin);
+    font-size: var(--step-2);
+  }
+
+  :global(html[lang='bn']) h2 {
+    font-family: var(--font-serif-bengali);
+  }
+
+  section > p:not(.eyebrow) {
+    max-width: 38rem;
+    color: var(--color-ink-soft);
+  }
+
+  dl {
+    margin: var(--space-5) 0 0;
+  }
+
+  dl div {
+    display: grid;
+    grid-template-columns: minmax(9rem, 1fr) auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  dd a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding-inline: var(--space-3);
+  }
+
+  .professional {
+    padding: var(--space-6);
+    background: var(--color-paper-soft);
+  }
+
+  @media (max-width: 34rem) {
+    dl div {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    dd a {
+      padding-inline: 0;
+    }
+  }
+
+  @media (min-width: 54rem) {
+    .contact-grid {
+      grid-template-columns: 1.2fr .8fr;
+    }
+  }
+</style>

@@ -1,5 +1,101 @@
 ---
-import {navigation} from '../config/navigation';import {siteConfig} from '../config/site';import {localizedPath} from '../utils/paths';import type {Language} from '../utils/i18n';interface Props{lang:Language}const{lang}=Astro.props;const year=new Date().getFullYear();
+import { navigation } from '../config/navigation';
+import { siteConfig } from '../config/site';
+import { localizedPath } from '../utils/paths';
+import type { Language } from '../utils/i18n';
+
+interface Props {
+  lang: Language;
+}
+
+const { lang } = Astro.props;
+const year = new Date().getFullYear();
 ---
-<footer class="site-footer"><div class="container footer-grid"><div><p class="footer-title">{siteConfig.title}</p><p>{siteConfig.description[lang]}</p></div><nav aria-label={lang==='bn'?'ফুটার নেভিগেশন':'Footer navigation'}><ul>{navigation[lang].map((item)=><li><a href={localizedPath(lang,item.path)}>{item.label}</a></li>)}</ul></nav><div class="footer-meta"><p>© {year} {siteConfig.title}</p><p>{lang==='bn'?'সোশ্যাল ও পেশাগত ওয়েবসাইটের আসল লিংক Contact পেজের কনফিগে যোগ করুন।':'Add real social and professional-site URLs through the Contact configuration when ready.'}</p></div></div></footer>
-<style>.site-footer{margin-top:var(--space-10);padding-block:var(--space-8);background:var(--color-forest-deep);color:var(--color-paper-soft)}.footer-grid{display:grid;gap:var(--space-7)}.footer-title{font-family:var(--font-serif-latin);font-size:var(--step-1);font-weight:750}:global(html[lang='bn']) .footer-title{font-family:var(--font-serif-bengali)}.footer-grid>div:first-child p:last-child{max-width:28rem;color:color-mix(in srgb,var(--color-paper-soft) 70%,transparent)}ul{display:grid;gap:var(--space-2);margin:0;padding:0;list-style:none}a{color:inherit}.footer-meta{color:color-mix(in srgb,var(--color-paper-soft) 72%,transparent);font-size:var(--step--1)}@media(min-width:48rem){.footer-grid{grid-template-columns:1.4fr .7fr 1fr}}</style>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-title">{siteConfig.title}</p>
+      <p>{siteConfig.description[lang]}</p>
+    </div>
+
+    <nav aria-label={lang === 'bn' ? 'ফুটার নেভিগেশন' : 'Footer navigation'}>
+      <ul>
+        {navigation[lang].map((item) => (
+          <li><a href={localizedPath(lang, item.path)}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="footer-meta">
+      <p>© {year} {siteConfig.title}</p>
+      <p>
+        {lang === 'bn'
+          ? 'সামাজিক মাধ্যম ও পেশাগত পোর্টফোলিওর লিংক Contact পেজে পাওয়া যাবে।'
+          : 'Social profiles and the separate professional portfolio are available on the Contact page.'}
+      </p>
+      <a href={localizedPath(lang, 'contact')}>
+        {lang === 'bn' ? 'যোগাযোগ দেখুন' : 'View contact links'}
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-10);
+    padding-block: var(--space-8);
+    background: var(--color-forest-deep);
+    color: var(--color-paper-soft);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .footer-title {
+    font-family: var(--font-serif-latin);
+    font-size: var(--step-1);
+    font-weight: 750;
+  }
+
+  :global(html[lang='bn']) .footer-title {
+    font-family: var(--font-serif-bengali);
+  }
+
+  .footer-grid > div:first-child p:last-child {
+    max-width: 28rem;
+    color: color-mix(in srgb, var(--color-paper-soft) 70%, transparent);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .footer-meta {
+    color: color-mix(in srgb, var(--color-paper-soft) 72%, transparent);
+    font-size: var(--step--1);
+  }
+
+  .footer-meta a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    margin-top: var(--space-2);
+    color: var(--color-paper-soft);
+  }
+
+  @media (min-width: 48rem) {
+    .footer-grid {
+      grid-template-columns: 1.4fr .7fr 1fr;
+    }
+  }
+</style>
