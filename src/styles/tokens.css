@@ -1,14 +1,14 @@
 :root {
-  --color-paper: #f6f1e7;
-  --color-paper-soft: #fbf8f2;
-  --color-ink: #252821;
-  --color-ink-soft: #62645c;
-  --color-forest: #33483a;
-  --color-forest-deep: #26372d;
-  --color-earth: #a47755;
-  --color-sand: #d8c5a8;
-  --color-border: #d9d2c5;
-  --color-focus: #775a3d;
+  --color-paper: #0b0d10;
+  --color-paper-soft: #171a20;
+  --color-ink: #f2ede3;
+  --color-ink-soft: #a9adb5;
+  --color-forest: #282d36;
+  --color-forest-deep: #101318;
+  --color-earth: #c9a86a;
+  --color-sand: #303541;
+  --color-border: #353943;
+  --color-focus: #e0bc7b;
 
   --font-serif-latin: 'Noto Serif', Georgia, 'Times New Roman', serif;
   --font-serif-bengali: 'Noto Serif Bengali', 'Noto Serif', Georgia, serif;
@@ -41,6 +41,6 @@
 
   --radius-small: 0.35rem;
   --radius-medium: 0.8rem;
-  --shadow-soft: 0 1rem 3rem rgb(37 40 33 / 0.08);
+  --shadow-soft: 0 1rem 3rem rgb(0 0 0 / 0.33);
   --transition-fast: 160ms ease;
 }

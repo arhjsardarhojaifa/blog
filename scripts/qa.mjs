@@ -255,7 +255,7 @@ if (fs.existsSync(tokensPath)) {
   const checks = [
     ['ink', 'paper', 4.5, 'body text'],
     ['ink-soft', 'paper', 4.5, 'secondary text'],
-    ['paper-soft', 'forest-deep', 4.5, 'dark-section text'],
+    ['ink', 'forest-deep', 4.5, 'dark-section text'],
     ['focus', 'paper', 3, 'focus indicator']
   ];
   let contrastErrors = 0;

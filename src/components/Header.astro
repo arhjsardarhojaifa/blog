@@ -32,10 +32,13 @@ const { lang, pathname, alternateHref, alternateAvailable } = Astro.props;
 
 <style>
   .site-header {
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
-    background: color-mix(in srgb, var(--color-paper) 94%, transparent);
+    background: color-mix(in srgb, var(--color-paper) 91%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
 
   .header-inner {
@@ -51,6 +54,7 @@ const { lang, pathname, alternateHref, alternateAvailable } = Astro.props;
     max-width: 24rem;
     font-size: var(--step--1);
     font-weight: 800;
+    color: var(--color-earth);
     letter-spacing: 0.08em;
     text-decoration: none;
     text-overflow: ellipsis;
