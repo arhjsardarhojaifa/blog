@@ -4,10 +4,11 @@ import type { CollectionEntry } from 'astro:content';
 import { contentPath } from '../utils/paths';
 interface Props { collection: CollectionEntry<'photography'>; }
 const { collection } = Astro.props;
+const cardImage = collection.data.cover ?? collection.data.images[0]?.image;
 ---
 <article class="photo-card">
   <a class="photo" href={contentPath(collection.data.lang, 'photography', collection.data.routeSlug)} tabindex="-1" aria-hidden="true">
-    {collection.data.cover ? <Image src={collection.data.cover} alt="" widths={[480,720,960,1200]} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" /> : <span></span>}
+    {cardImage ? <Image src={cardImage} alt="" widths={[480,720,960,1200]} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" /> : <span></span>}
   </a>
   <div>
     <p class="eyebrow">{collection.data.location ?? (collection.data.lang === 'bn' ? 'ফটোগ্রাফি' : 'Photography')}</p>
